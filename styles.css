@@ -1,0 +1,17 @@
+#gameBoard{
+    display: grid;
+    background-color: gray;
+    margin: 0 auto;
+    width: 580px;
+    height: 580px;
+}
+
+.row{
+    display: flex;
+    align-content: flex-end;
+}
+
+.boardItem{
+    flex: 1;
+    border: 1px solid rgb(0, 0, 0);
+}
