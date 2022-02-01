@@ -21,8 +21,8 @@ const gameBoard = (()=>{
 
 
 //Player factory function
-const Player = () =>{
-    const name = window.prompt('Enter player name');
+const Player = (name) =>{
+    const getName = name;
     const sign = window.prompt('X or O?');
     return {name, sign};
 };
@@ -38,4 +38,18 @@ const buttons = (()=>{
 
     const player1Button = inputDOM(1);
     const player2Button = inputDOM(2);
+
+    //Event Listeners
+    player1Button.addEventListener('keypress', (e)=>{
+        if (e.key === 'Enter') {
+            const player1 = Player(e.target.value);
+            console.log(player1)
+        }
+    })
+    player2Button.addEventListener('keypress', (e)=>{
+        if (e.key === 'Enter') {
+            const player2 = Player(e.target.value);
+            console.log(player2)
+        }
+    })
 })();
