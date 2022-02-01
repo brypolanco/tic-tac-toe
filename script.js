@@ -21,35 +21,52 @@ const gameBoard = (()=>{
 
 
 //Player factory function
-const Player = (name) =>{
-    const getName = name;
-    const sign = window.prompt('X or O?');
+const Player = (name, sign) =>{
     return {name, sign};
 };
 
 //UI Buttons module
 const buttons = (()=>{
+    //DOM elements
     const inputDOM = (player)=>{
         const inputArea = document.createElement('input');
         inputArea.placeholder = `Player ${player}`;
-        document.body.appendChild(inputArea).id = `player${player}-button`;
+        document.body.appendChild(inputArea).id = `player${player}-input`;
         return inputArea;
     };
 
-    const player1Button = inputDOM(1);
-    const player2Button = inputDOM(2);
+    const removeDOM = ()=>{
+        if(player1 && player2){
+            player1Area.remove();
+            player2Area.remove();
+            startDOM();
+        }
+    }
+
+    const startDOM = ()=>{
+        const startButton = document.createElement('button');
+        startButton.textContent = 'START';
+        document.body.appendChild(startButton).id = 'start-button';
+    }
+
+    const player1Area = inputDOM(1);
+    const player2Area = inputDOM(2);
+
 
     //Event Listeners
-    player1Button.addEventListener('keypress', (e)=>{
+    let player1 = player1Area.addEventListener('keypress', (e)=>{
         if (e.key === 'Enter') {
-            const player1 = Player(e.target.value);
+            player1 = Player(e.target.value, 'X');
             console.log(player1)
+            removeDOM();
         }
     })
-    player2Button.addEventListener('keypress', (e)=>{
+
+    let player2 = player2Area.addEventListener('keypress', (e)=>{
         if (e.key === 'Enter') {
-            const player2 = Player(e.target.value);
+            player2 = Player(e.target.value, 'O');
             console.log(player2)
+            removeDOM();
         }
     })
 })();
