@@ -4,22 +4,21 @@ const gameBoard = (()=>{
 
     const boardContainer = document.querySelector('#gameBoard');
 
-    const buildBoard = ()=>{
-        for(let i = 0; i<3; i++){
+    const buildBoard = (space)=>{
+        for(let i = 0; i<space; i++){
             let boardRow = document.createElement('div')
             boardContainer.appendChild(boardRow).className='row';
-            for(let j = 0; j<3; j++){
+            for(let j = 0; j<space; j++){
                 let boardItem = document.createElement('div');
                 boardRow.appendChild(boardItem).className='boardItem';
                 items.push(boardItem);
             }
         }
     };
-
-    return {buildBoard};
+    buildBoard(3);
+    console.log(items);
 })();
 
-gameBoard.buildBoard();
 
 //Player factory function
 const Player = () =>{
@@ -31,10 +30,10 @@ const Player = () =>{
 //UI Buttons module
 const buttons = (()=>{
     const inputDOM = (player)=>{
-        const inputButton = document.createElement('input');
-        inputButton.placeholder = `Player ${player}`;
-        document.body.appendChild(inputButton).id = `player${player}-button`;
-        return inputButton;
+        const inputArea = document.createElement('input');
+        inputArea.placeholder = `Player ${player}`;
+        document.body.appendChild(inputArea).id = `player${player}-button`;
+        return inputArea;
     };
 
     const player1Button = inputDOM(1);
