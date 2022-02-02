@@ -1,3 +1,30 @@
+//Game Logic
+const gameLogic = ((player1, player2)=>{
+    const rounds = ()=>{
+        console.log('hi')
+    }
+
+    const chooseTurn = ()=>{
+
+    }
+
+    const clickSpace = ()=>{
+
+    }
+
+    const spaceTaken = ()=>{
+
+    }
+
+    const checkRows = ()=>{
+
+    }
+
+    return {rounds};
+
+})();
+
+
 //Gameboard module
 const gameBoard = (()=>{
     let items = [];
@@ -20,35 +47,10 @@ const gameBoard = (()=>{
         }
     };
     const boardDOM = buildBoard(3);
-    const getItems = ()=>{items};
 
-    console.log(getItems);
-    return {getItems};
-})();
-
-
-//Game Logic
-const gameLogic = ((player1, player2)=>{
-    const rounds = ()=>{
-
-    }
-
-    const chooseTurn = ()=>{
-
-    }
-
-    const clickSpace = ()=>{
-
-    }
-
-    const spaceTaken = ()=>{
-
-    }
-
-    const checkRows = ()=>{
-
-    }
-
+    items.forEach((square)=>{
+        square.addEventListener('click', gameLogic.rounds)
+    })
 })();
 
 
@@ -75,8 +77,8 @@ const buttons = (()=>{
 
     //Event Listeners
     startButton.addEventListener('click', ()=>{
-        gameLogic(player1, player2);
+        gameLogic;
     })
 
-
+    return {player1, player2}
 })();
