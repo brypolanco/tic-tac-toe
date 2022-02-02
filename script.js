@@ -5,12 +5,16 @@ const gameBoard = (()=>{
     const boardContainer = document.querySelector('#gameBoard');
 
     const buildBoard = (space)=>{
+        let row = 0;
         for(let i = 0; i<space; i++){
+            row++;
+            let col = 0;
             let boardRow = document.createElement('div')
             boardContainer.appendChild(boardRow).className='row';
             for(let j = 0; j<space; j++){
+                col++;
                 let boardItem = document.createElement('div');
-                boardRow.appendChild(boardItem).className='boardItem';
+                boardRow.appendChild(boardItem).className=`boardItem row${row} column${col}`;
                 items.push(boardItem);
             }
         }
@@ -19,16 +23,21 @@ const gameBoard = (()=>{
     const getItems = ()=>{items};
 
     console.log(getItems);
+    return {getItems};
 })();
 
 
 //Game Logic
-const gameLogic = (()=>{
+const gameLogic = ((player1, player2)=>{
     const rounds = ()=>{
 
     }
 
     const chooseTurn = ()=>{
+
+    }
+
+    const clickSpace = ()=>{
 
     }
 
@@ -40,12 +49,13 @@ const gameLogic = (()=>{
 
     }
 
-})(player1, player2);
+})();
 
 
 //Player factory function
-const Player = (name, sign) =>{
-    return {name, sign, position, myTurn};
+const Player = (name, sign, myTurn) =>{
+    let position;
+    return {name, sign, myTurn, position};
 };
 
 //UI Buttons module
@@ -60,8 +70,8 @@ const buttons = (()=>{
     
     const startButton = startDOM();
 
-    let player1 = Player('Player 1', 'X');
-    let player2 = Player('Player 2', 'O');
+    let player1 = Player('Player 1', 'X', true);
+    let player2 = Player('Player 2', 'O', false);
 
     //Event Listeners
     startButton.addEventListener('click', ()=>{
