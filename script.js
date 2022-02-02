@@ -22,9 +22,30 @@ const gameBoard = (()=>{
 })();
 
 
+//Game Logic
+const gameLogic = (()=>{
+    const rounds = ()=>{
+
+    }
+
+    const chooseTurn = ()=>{
+
+    }
+
+    const spaceTaken = ()=>{
+
+    }
+
+    const checkRows = ()=>{
+
+    }
+
+})(player1, player2);
+
+
 //Player factory function
 const Player = (name, sign) =>{
-    return {name, sign};
+    return {name, sign, position, myTurn};
 };
 
 //UI Buttons module
@@ -39,11 +60,13 @@ const buttons = (()=>{
     
     const startButton = startDOM();
 
-    //Event Listeners
-    startButton.addEventListener('click', gameLogic)
-
     let player1 = Player('Player 1', 'X');
     let player2 = Player('Player 2', 'O');
 
-    return{player1, player2};
+    //Event Listeners
+    startButton.addEventListener('click', ()=>{
+        gameLogic(player1, player2);
+    })
+
+
 })();
