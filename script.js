@@ -1,13 +1,17 @@
 //Game Logic
 const gameLogic = (()=>{
     let currentRound = 0;
+
     const rounds = (itemDOM)=>{
         currentRound++;
         console.log('round '+currentRound)
-        chooseTurn(itemDOM);
     }
-
+    
     const chooseTurn = (itemDOM)=>{
+        if(spaceTaken(itemDOM)){
+            return;
+        }
+
         if(buttons.player1.myTurn === true){
             console.log('if player 1')
             clickSpace(itemDOM, buttons.player1);
@@ -25,17 +29,26 @@ const gameLogic = (()=>{
         console.log('current player sign: ' + player.sign)
         itemDOM.textContent = player.sign;
         player.myTurn = false;
+        rounds();
     }
 
-    const spaceTaken = ()=>{
-
+    const spaceTaken = (itemDOM)=>{
+        if(itemDOM.textContent){
+            console.log('space is taken')
+            return true;
+        }
+        else{
+            console.log('space is empty')
+            return false;
+        }
     }
 
     const checkRows = ()=>{
 
     }
 
-    return {rounds};
+
+    return {chooseTurn};
 
 })();
 
@@ -65,7 +78,7 @@ const gameBoard = (()=>{
 
     items.forEach((square)=>{
         square.addEventListener('click', ()=>{
-            gameLogic.rounds(square)
+            gameLogic.chooseTurn(square)
         })
     })
 })();
