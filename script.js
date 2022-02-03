@@ -1,6 +1,12 @@
 //Game Logic
 const gameLogic = (()=>{
-    let currentRound = 0;
+    let currentRound = 1;
+    let runFunctions = false;
+    
+    const startGame = (state)=>{
+        runFunctions = state;
+        console.log('Start game')
+    }
 
     const rounds = (itemDOM)=>{
         currentRound++;
@@ -8,10 +14,13 @@ const gameLogic = (()=>{
     }
     
     const chooseTurn = (itemDOM)=>{
+        if(runFunctions === false){
+            console.log('Cant run. Press Start first.')
+            return;
+        }
         if(spaceTaken(itemDOM)){
             return;
         }
-
         if(buttons.player1.myTurn === true){
             console.log('if player 1')
             clickSpace(itemDOM, buttons.player1);
@@ -29,6 +38,8 @@ const gameLogic = (()=>{
         console.log('current player sign: ' + player.sign)
         itemDOM.textContent = player.sign;
         player.myTurn = false;
+
+        checkRows(itemDOM);
         rounds();
     }
 
@@ -43,12 +54,12 @@ const gameLogic = (()=>{
         }
     }
 
-    const checkRows = ()=>{
+    const checkRows = (itemDOM)=>{
 
     }
 
 
-    return {chooseTurn};
+    return {startGame, chooseTurn};
 
 })();
 
@@ -107,7 +118,7 @@ const buttons = (()=>{
 
     //Event Listeners
     startButton.addEventListener('click', ()=>{
-        gameLogic;
+        gameLogic.startGame(true);
     })
 
     return {player1, player2}
