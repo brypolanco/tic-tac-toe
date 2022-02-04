@@ -8,7 +8,7 @@ const gameLogic = (()=>{
         console.log('Start game')
     }
 
-    const rounds = (itemDOM)=>{
+    const rounds = ()=>{
         currentRound++;
         console.log('round '+currentRound)
     }
@@ -39,7 +39,7 @@ const gameLogic = (()=>{
         itemDOM.textContent = player.sign;
         player.myTurn = false;
 
-        checkRows(itemDOM);
+        checkRows(itemDOM, player.sign);
         rounds();
     }
 
@@ -54,8 +54,50 @@ const gameLogic = (()=>{
         }
     }
 
-    const checkRows = (itemDOM)=>{
+    const checkRows = (itemDOM, sign)=>{
+        const gameBoardDOM = gameBoard.items; 
+        let itemsAround = checkSpaceAround(itemDOM);
+        for(let row = 1; row<=3; row++){
+            for(let col = 1; col<=3; col++){
 
+            }
+        }
+    }
+
+    const checkSpaceAround = (itemDOM)=>{
+
+
+        switch(itemDOM.className){
+            case 'column1':
+                //no item on left
+                break;
+            case 'column2':
+                //items on left and right
+                break;
+            case 'column3':
+                //no item on right
+                break;
+        }
+        switch(itemDOM.className){
+            case 'row1':
+                //no item on top
+                break;
+            case 'row2':
+                //items on top and bottom
+                break;
+            case 'row3':
+                //no item on bottom
+                break;
+        }
+
+        /*
+        if (itemDOM has itemsRight and itemsbottom 
+            or itemsTop and itemsRight or itemsleft and itemsbottom 
+            or itemsleft and itemstop or itemstop and itemsbottom and 
+            itemsleft and items right){
+                has items diagonally
+            }
+        */
     }
 
 
@@ -70,28 +112,25 @@ const gameBoard = (()=>{
 
     const boardContainer = document.querySelector('#gameBoard');
 
-    const buildBoard = (space)=>{
-        let row = 0;
-        for(let i = 0; i<space; i++){
-            row++;
-            let col = 0;
+    const buildBoard = ()=>{
+        for(let row = 1; row<=3; row++){
             let boardRow = document.createElement('div')
             boardContainer.appendChild(boardRow).className='row';
-            for(let j = 0; j<space; j++){
-                col++;
+            for(let col = 1; col<=3; col++){
                 let boardItem = document.createElement('div');
                 boardRow.appendChild(boardItem).className=`boardItem row${row} column${col}`;
                 items.push(boardItem);
             }
         }
     };
-    const boardDOM = buildBoard(3);
+    buildBoard();
 
     items.forEach((square)=>{
         square.addEventListener('click', ()=>{
             gameLogic.chooseTurn(square)
         })
     })
+    return {items}
 })();
 
 
@@ -103,7 +142,6 @@ const Player = (name, sign, myTurn) =>{
 
 //UI Buttons module
 const buttons = (()=>{
-    //DOM elements
     const startDOM = ()=>{
         const startButton = document.createElement('button');
         startButton.textContent = 'START';
@@ -116,10 +154,8 @@ const buttons = (()=>{
     let player1 = Player('Player 1', 'X', true);
     let player2 = Player('Player 2', 'O', false);
 
-    //Event Listeners
     startButton.addEventListener('click', ()=>{
         gameLogic.startGame(true);
     })
-
     return {player1, player2}
 })();
