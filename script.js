@@ -13,7 +13,7 @@ const gameLogic = (()=>{
         console.log('round '+currentRound)
     }
     
-    const chooseTurn = (itemDOM)=>{
+    const chooseTurn = (itemDOM, position)=>{
         if(runFunctions === false){
             console.log('Cant run. Press Start first.')
             return;
@@ -23,11 +23,13 @@ const gameLogic = (()=>{
         }
         if(buttons.player1.myTurn === true){
             console.log('if player 1')
+            buttons.player1.position = position;
             clickSpace(itemDOM, buttons.player1);
             buttons.player2.myTurn = true;
         }
         else if(buttons.player2.myTurn === true){
             console.log('else if player2')
+            buttons.player2.position = position;
             clickSpace(itemDOM, buttons.player2);
             buttons.player1.myTurn = true;
         }
@@ -147,10 +149,12 @@ const gameBoard = (()=>{
         }
     };
     buildBoard();
+    
 
     items.forEach((square)=>{
         square.addEventListener('click', ()=>{
-            gameLogic.chooseTurn(square)
+            let position = items.findIndex(square);
+            gameLogic.chooseTurn(square, position)
         })
     })
     return {items}
