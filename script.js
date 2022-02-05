@@ -150,12 +150,10 @@ const gameBoard = (()=>{
     };
     buildBoard();
     
+
     items.forEach((square)=>{
         square.addEventListener('click', ()=>{
-            let position = items.findIndex((element)=>{
-                return element === square;
-            })
-            console.log(`position is at items[${position}]`)
+            let position = items.findIndex(square);
             gameLogic.chooseTurn(square, position)
         })
     })
