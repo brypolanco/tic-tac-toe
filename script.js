@@ -39,7 +39,7 @@ const gameLogic = (()=>{
         itemDOM.textContent = player.sign;
         player.myTurn = false;
 
-        checkRows(itemDOM, player.sign);
+        checkSpace(itemDOM, player);
         rounds();
     }
 
@@ -54,7 +54,67 @@ const gameLogic = (()=>{
         }
     }
 
-    const checkRows = (itemDOM, sign)=>{
+    const checkSpace = (itemDOM, sign)=>{
+        let items = [];
+
+        switch(itemDOM.className){
+            case 'column1':
+                items.left = false;
+                items.right = true;
+                checkRow(items, sign);
+                break;
+            case 'column2':
+                items.left = true;
+                items.right = true;
+                checkRow(items, sign);
+                break;
+            case 'column3':
+                items.left = true;
+                items.right = false;
+                checkRow(items, sign);
+                break;
+        }
+
+        switch(itemDOM.className){
+            case 'row1':
+                items.top = false;
+                items.bottom = true;
+                checkColumn(items, sign);
+                break;
+            case 'row2':
+                items.top = true;
+                items.bottom = true;
+                checkColumn(items, sign);
+                break;
+            case 'row3':
+                items.top = true;
+                items.bottom = false;
+                checkColumn(items, sign);
+                break;
+        }
+
+        switch(items){
+            case (items.right && items.bottom) ||
+            (items.left && items.top):
+                items.diagonal1 = true;
+                items.diagonal2 = false;
+                checkDiagonal(items, sign);
+                break;
+            case items.top && items.bottom && items.left && items.right:
+                items.diagonal1 = true;
+                items.diagonal2 = true;
+                checkDiagonal(items, sign);
+                break;
+            case (items.left && items.bottom) ||
+            (items.right && items.top):
+                items.diagonal1 = false;
+                items.diagonal2 = true;
+                checkDiagonal(items, sign);
+                break;
+        }
+    }
+
+    const checkRow = (itemSpace, sign)=>{
         const gameBoardDOM = gameBoard.items; 
         let itemsAround = checkSpaceAround(itemDOM);
         for(let row = 1; row<=3; row++){
@@ -63,44 +123,7 @@ const gameLogic = (()=>{
             }
         }
     }
-
-    const checkSpaceAround = (itemDOM)=>{
-
-
-        switch(itemDOM.className){
-            case 'column1':
-                //no item on left
-                break;
-            case 'column2':
-                //items on left and right
-                break;
-            case 'column3':
-                //no item on right
-                break;
-        }
-        switch(itemDOM.className){
-            case 'row1':
-                //no item on top
-                break;
-            case 'row2':
-                //items on top and bottom
-                break;
-            case 'row3':
-                //no item on bottom
-                break;
-        }
-
-        /*
-        if (itemDOM has itemsRight and itemsbottom 
-            or itemsTop and itemsRight or itemsleft and itemsbottom 
-            or itemsleft and itemstop or itemstop and itemsbottom and 
-            itemsleft and items right){
-                has items diagonally
-            }
-        */
-    }
-
-
+    
     return {startGame, chooseTurn};
 
 })();
