@@ -56,24 +56,24 @@ const gameLogic = (()=>{
         }
     }
 
-    const checkSpace = (itemDOM, sign)=>{
+    const checkSpace = (itemDOM, player)=>{
         let items = [];
 
         switch(itemDOM.className){
             case 'column1':
                 items.left = false;
                 items.right = true;
-                checkRow(items, sign);
+                checkRow(items, player);
                 break;
             case 'column2':
                 items.left = true;
                 items.right = true;
-                checkRow(items, sign);
+                checkRow(items, player);
                 break;
             case 'column3':
                 items.left = true;
                 items.right = false;
-                checkRow(items, sign);
+                checkRow(items, player);
                 break;
         }
 
@@ -81,17 +81,17 @@ const gameLogic = (()=>{
             case 'row1':
                 items.top = false;
                 items.bottom = true;
-                checkColumn(items, sign);
+                checkColumn(items, player);
                 break;
             case 'row2':
                 items.top = true;
                 items.bottom = true;
-                checkColumn(items, sign);
+                checkColumn(items, player);
                 break;
             case 'row3':
                 items.top = true;
                 items.bottom = false;
-                checkColumn(items, sign);
+                checkColumn(items, player);
                 break;
         }
 
@@ -100,29 +100,65 @@ const gameLogic = (()=>{
             (items.left && items.top):
                 items.diagonal1 = true;
                 items.diagonal2 = false;
-                checkDiagonal(items, sign);
+                checkDiagonal(items, player);
                 break;
             case items.top && items.bottom && items.left && items.right:
                 items.diagonal1 = true;
                 items.diagonal2 = true;
-                checkDiagonal(items, sign);
+                checkDiagonal(items, player);
                 break;
             case (items.left && items.bottom) ||
             (items.right && items.top):
                 items.diagonal1 = false;
                 items.diagonal2 = true;
-                checkDiagonal(items, sign);
+                checkDiagonal(items, player);
                 break;
         }
     }
 
-    const checkRow = (itemSpace, sign)=>{
-        const gameBoardDOM = gameBoard.items; 
-        let itemsAround = checkSpaceAround(itemDOM);
-        for(let row = 1; row<=3; row++){
-            for(let col = 1; col<=3; col++){
+    const checkRow = (itemSpace, player)=>{
+        const siblingDOM = gameBoard.items;
+        const position = player.positon;
+        
+        switch(itemSpace){
+            case itemSpace.left && itemSpace.right:
+                if(siblingDOM[position-1].textContent===player.sign && siblingDOM[position+1].textContent===player.sign){
+                    gameWon(player);
+                }
+                break;
+            case itemSpace.left:
+                if(siblingDOM[position-1].textContent===player.sign && siblingDOM[position-2].textContent===player.sign){
+                    gameWon(player);
+                }
+                break;
+            case itemSpace.right:
+                if(siblingDOM[position+1].textContent===player.sign && siblingDOM[position+2].textContent===player.sign){
+                    gameWon(player);
+                }
+                break;
+        }
+    }
 
-            }
+    const checkColumn = (itemSpace, player)=>{
+        const siblingDOM = gameBoard.items;
+        const position = player.positon;
+        
+        switch(itemSpace){
+            case itemSpace.top && itemSpace.bottom:
+                if(siblingDOM[position-3].textContent===player.sign && siblingDOM[position+3].textContent===player.sign){
+                    gameWon(player);
+                }
+                break;
+            case itemSpace.top:
+                if(siblingDOM[position-3].textContent===player.sign && siblingDOM[position-6].textContent===player.sign){
+                    gameWon(player);
+                }
+                break;
+            case itemSpace.bottom:
+                if(siblingDOM[position+3].textContent===player.sign && siblingDOM[position+6].textContent===player.sign){
+                    gameWon(player);
+                }
+                break;
         }
     }
     
@@ -150,10 +186,12 @@ const gameBoard = (()=>{
     };
     buildBoard();
     
-
     items.forEach((square)=>{
         square.addEventListener('click', ()=>{
-            let position = items.findIndex(square);
+            let position = items.findIndex((element)=>{
+                return element === square;
+            })
+            console.log(`position is at items[${position}]`)
             gameLogic.chooseTurn(square, position)
         })
     })
