@@ -18,9 +18,13 @@ const gameLogic = (()=>{
             console.log('Cant run. Press Start first.')
             return;
         }
-        if(spaceTaken(itemDOM)){
+
+        if(currentRound>=2){
+            if(spaceTaken(itemDOM)){
             return;
+            }
         }
+
         if(buttons.player1.myTurn === true){
             console.log('if player 1')
             buttons.player1.position = position;
@@ -40,8 +44,11 @@ const gameLogic = (()=>{
         console.log('current player sign: ' + player.sign)
         itemDOM.textContent = player.sign;
         player.myTurn = false;
-
-        checkSpace(itemDOM, player);
+        //change to currentRound>=5
+        if(currentRound>=1){
+            checkSpace(itemDOM, player);
+        }
+        
         rounds();
     }
 
@@ -58,68 +65,70 @@ const gameLogic = (()=>{
 
     const checkSpace = (itemDOM, player)=>{
         let items = [];
+        let itemClass = itemDOM.classList;
+        console.log('checkSpace is run')
 
-        switch(itemDOM.className){
-            case 'column1':
+        const rowSpace = ()=>{
+            if(itemClass.contains('column1')){
                 items.left = false;
                 items.right = true;
-                checkRow(items, player);
-                break;
-            case 'column2':
+            }
+            if(itemClass.contains('column2')){
                 items.left = true;
                 items.right = true;
-                checkRow(items, player);
-                break;
-            case 'column3':
+            }
+            if(itemClass.contains('column3')){
                 items.left = true;
                 items.right = false;
-                checkRow(items, player);
-                break;
+            }
+            checkRow(items, player);
         }
+        rowSpace();
 
-        switch(itemDOM.className){
-            case 'row1':
+        const columnSpace = ()=>{
+            if(itemClass.contains('row1')){
                 items.top = false;
                 items.bottom = true;
-                checkColumn(items, player);
-                break;
-            case 'row2':
+            }
+            if(itemClass.contains('row2')){
                 items.top = true;
                 items.bottom = true;
-                checkColumn(items, player);
-                break;
-            case 'row3':
+            }
+            if(itemClass.contains('row3')){
                 items.top = true;
                 items.bottom = false;
-                checkColumn(items, player);
-                break;
+            }
+            checkColumn(items, player);
         }
+        columnSpace();
 
-        switch(items){
-            case (items.right && items.bottom) ||
-            (items.left && items.top):
-                items.diagonal1 = true;
-                items.diagonal2 = false;
-                checkDiagonal(items, player);
-                break;
-            case items.top && items.bottom && items.left && items.right:
+        const diagonalSpace = ()=>{
+            if(items.top && items.bottom && items.left && items.right){
                 items.diagonal1 = true;
                 items.diagonal2 = true;
-                checkDiagonal(items, player);
-                break;
-            case (items.left && items.bottom) ||
-            (items.right && items.top):
-                items.diagonal1 = false;
-                items.diagonal2 = true;
-                checkDiagonal(items, player);
-                break;
+            }
+            else if(!(itemClass.contains('column2')||itemClass.contains('row2'))){
+                if((items.right && items.bottom) || (items.left && items.top)){
+                    items.diagonal1 = true;
+                    items.diagonal2 = false;
+                }
+                if((items.right && items.top) || (items.left && items.bottom)){
+                    items.diagonal1 = false;
+                    items.diagonal2 = true;
+                }
+            }
+            checkDiagonal(items, player);
         }
+        diagonalSpace();
+
+        console.log(items)
     }
 
     const checkRow = (itemSpace, player)=>{
         const siblingDOM = gameBoard.items;
         const position = player.positon;
-        
+        console.log('checkRow is run')
+
         switch(itemSpace){
             case itemSpace.left && itemSpace.right:
                 if(siblingDOM[position-1].textContent===player.sign && siblingDOM[position+1].textContent===player.sign){
@@ -142,7 +151,8 @@ const gameLogic = (()=>{
     const checkColumn = (itemSpace, player)=>{
         const siblingDOM = gameBoard.items;
         const position = player.positon;
-        
+        console.log('checkColumn is run')
+
         switch(itemSpace){
             case itemSpace.top && itemSpace.bottom:
                 if(siblingDOM[position-3].textContent===player.sign && siblingDOM[position+3].textContent===player.sign){
@@ -162,6 +172,49 @@ const gameLogic = (()=>{
         }
     }
     
+    const checkDiagonal = (itemSpace, player)=>{
+        const siblingDOM = gameBoard.items;
+        const position = player.positon;
+        console.log('checkDiagonal is run')
+
+        switch(itemSpace){
+            case itemSpace.diagonal1 && itemSpace.diagonal2:
+                if((siblingDOM[position-4].textContent===player.sign && siblingDOM[position+4].textContent===player.sign)
+                || (siblingDOM[position-2].textContent===player.sign && siblingDOM[position+2].textContent===player.sign)){
+                    gameWon(player);
+                }
+                break;
+            case itemSpace.diagonal1:
+                if(itemSpace.top){
+                    if(siblingDOM[position-4].textContent===player.sign && siblingDOM[position-8].textContent===player.sign){
+                        gameWon(player);
+                    }
+                }
+                else if(itemSpace.bottom){
+                    if(siblingDOM[position+4].textContent===player.sign && siblingDOM[position+8].textContent===player.sign){
+                        gameWon(player);
+                    }
+                }
+                break;
+            case itemSpace.diagonal2:
+                if(itemSpace.top){
+                    if(siblingDOM[position-2].textContent===player.sign && siblingDOM[position-4].textContent===player.sign){
+                        gameWon(player);
+                    }
+                }
+                else if(itemSpace.bottom){
+                    if(siblingDOM[position+2].textContent===player.sign && siblingDOM[position+4].textContent===player.sign){
+                        gameWon(player);
+                    }
+                }
+                break;
+        }
+    }
+    
+    const gameWon = (player)=>{
+        console.log(`congrats to ${player.name}`)
+    }
+
     return {startGame, chooseTurn};
 
 })();
