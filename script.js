@@ -81,7 +81,7 @@ const gameLogic = (()=>{
                 items.left = true;
                 items.right = false;
             }
-            checkRow(items, player);
+            checkRow(items, player, player.position, player.sign);
         }
         rowSpace();
 
@@ -98,7 +98,7 @@ const gameLogic = (()=>{
                 items.top = true;
                 items.bottom = false;
             }
-            checkColumn(items, player);
+            checkColumn(items, player, player.position, player.sign);
         }
         columnSpace();
 
@@ -117,97 +117,95 @@ const gameLogic = (()=>{
                     items.diagonal2 = true;
                 }
             }
-            checkDiagonal(items, player);
+            checkDiagonal(items, player, player.position, player.sign);
         }
         diagonalSpace();
 
         console.log(items)
     }
 
-    const checkRow = (itemSpace, player)=>{
+    const checkRow = (itemSpace, player, position, sign)=>{
         const siblingDOM = gameBoard.items;
-        const position = player.positon;
         console.log('checkRow is run')
 
-        switch(itemSpace){
-            case itemSpace.left && itemSpace.right:
-                if(siblingDOM[position-1].textContent===player.sign && siblingDOM[position+1].textContent===player.sign){
-                    gameWon(player);
-                }
-                break;
-            case itemSpace.left:
-                if(siblingDOM[position-1].textContent===player.sign && siblingDOM[position-2].textContent===player.sign){
-                    gameWon(player);
-                }
-                break;
-            case itemSpace.right:
-                if(siblingDOM[position+1].textContent===player.sign && siblingDOM[position+2].textContent===player.sign){
-                    gameWon(player);
-                }
-                break;
+        if (itemSpace.left && itemSpace.right){
+            if(siblingDOM[position-1].textContent===sign && siblingDOM[position+1].textContent===sign){
+                gameWon(player);
+            }
+        }
+
+        else if (itemSpace.left){
+            if(siblingDOM[position-1].textContent===sign && siblingDOM[position-2].textContent===sign){
+                gameWon(player);
+            }
+        }
+
+        else if (itemSpace.right){
+            if(siblingDOM[position+1].textContent===sign && siblingDOM[position+2].textContent===sign){
+                gameWon(player);
+            }
         }
     }
 
-    const checkColumn = (itemSpace, player)=>{
+    const checkColumn = (itemSpace, player, position, sign)=>{
         const siblingDOM = gameBoard.items;
-        const position = player.positon;
         console.log('checkColumn is run')
 
-        switch(itemSpace){
-            case itemSpace.top && itemSpace.bottom:
-                if(siblingDOM[position-3].textContent===player.sign && siblingDOM[position+3].textContent===player.sign){
-                    gameWon(player);
-                }
-                break;
-            case itemSpace.top:
-                if(siblingDOM[position-3].textContent===player.sign && siblingDOM[position-6].textContent===player.sign){
-                    gameWon(player);
-                }
-                break;
-            case itemSpace.bottom:
-                if(siblingDOM[position+3].textContent===player.sign && siblingDOM[position+6].textContent===player.sign){
-                    gameWon(player);
-                }
-                break;
+        if (itemSpace.top && itemSpace.bottom){
+            if(siblingDOM[position-3].textContent===sign && siblingDOM[position+3].textContent===sign){
+                gameWon(player);
+            }
+        }
+
+        else if (itemSpace.top){
+            if(siblingDOM[position-3].textContent===sign && siblingDOM[position-6].textContent===sign){
+                gameWon(player);
+            }
+        }
+
+        else if (itemSpace.bottom){
+            if(siblingDOM[position+3].textContent===sign && siblingDOM[position+6].textContent===sign){
+                gameWon(player);
+            }
         }
     }
     
-    const checkDiagonal = (itemSpace, player)=>{
+    const checkDiagonal = (itemSpace, player, position, sign)=>{
         const siblingDOM = gameBoard.items;
-        const position = player.positon;
+        console.log('diagonal sign: '+sign);
         console.log('checkDiagonal is run')
 
-        switch(itemSpace){
-            case itemSpace.diagonal1 && itemSpace.diagonal2:
-                if((siblingDOM[position-4].textContent===player.sign && siblingDOM[position+4].textContent===player.sign)
-                || (siblingDOM[position-2].textContent===player.sign && siblingDOM[position+2].textContent===player.sign)){
+        if(itemSpace.diagonal1 && itemSpace.diagonal2){
+            if((siblingDOM[position-4].textContent===sign && siblingDOM[position+4].textContent===sign)
+            || (siblingDOM[position-2].textContent===sign && siblingDOM[position+2].textContent===sign)){
+                gameWon(player);
+            }            
+        }
+
+        else if (itemSpace.diagonal1){
+            if(itemSpace.top){
+                if(siblingDOM[position-4].textContent===sign && siblingDOM[position-8].textContent===sign){
                     gameWon(player);
                 }
-                break;
-            case itemSpace.diagonal1:
-                if(itemSpace.top){
-                    if(siblingDOM[position-4].textContent===player.sign && siblingDOM[position-8].textContent===player.sign){
-                        gameWon(player);
-                    }
+            }
+            else if(itemSpace.bottom){
+                if(siblingDOM[position+4].textContent===sign && siblingDOM[position+8].textContent===sign){
+                    gameWon(player);
                 }
-                else if(itemSpace.bottom){
-                    if(siblingDOM[position+4].textContent===player.sign && siblingDOM[position+8].textContent===player.sign){
-                        gameWon(player);
-                    }
+            }
+        }
+
+        else if (itemSpace.diagonal2){
+            if(itemSpace.top){
+                if(siblingDOM[position-2].textContent===sign && siblingDOM[position-4].textContent===sign){
+                    gameWon(player);
                 }
-                break;
-            case itemSpace.diagonal2:
-                if(itemSpace.top){
-                    if(siblingDOM[position-2].textContent===player.sign && siblingDOM[position-4].textContent===player.sign){
-                        gameWon(player);
-                    }
+            }
+            else if(itemSpace.bottom){
+                if(siblingDOM[position+2].textContent===sign && siblingDOM[position+4].textContent===sign){
+                    gameWon(player);
                 }
-                else if(itemSpace.bottom){
-                    if(siblingDOM[position+2].textContent===player.sign && siblingDOM[position+4].textContent===player.sign){
-                        gameWon(player);
-                    }
-                }
-                break;
+            }            
         }
     }
     
