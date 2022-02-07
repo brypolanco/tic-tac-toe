@@ -44,8 +44,7 @@ const gameLogic = (()=>{
         console.log('current player sign: ' + player.sign)
         itemDOM.textContent = player.sign;
         player.myTurn = false;
-        //change to currentRound>=5
-        if(currentRound>=1){
+        if(currentRound>=5){
             checkSpace(itemDOM, player);
         }
         
@@ -81,9 +80,11 @@ const gameLogic = (()=>{
                 items.left = true;
                 items.right = false;
             }
-            checkRow(items, player, player.position, player.sign);
+            return checkRow(items, player, player.position, player.sign);
         }
-        rowSpace();
+        if(rowSpace()===true){
+            return;
+        }
 
         const columnSpace = ()=>{
             if(itemClass.contains('row1')){
@@ -98,9 +99,11 @@ const gameLogic = (()=>{
                 items.top = true;
                 items.bottom = false;
             }
-            checkColumn(items, player, player.position, player.sign);
+            return checkColumn(items, player, player.position, player.sign);
         }
-        columnSpace();
+        if(columnSpace()===true){
+            return;
+        }
 
         const diagonalSpace = ()=>{
             if(items.top && items.bottom && items.left && items.right){
@@ -117,9 +120,11 @@ const gameLogic = (()=>{
                     items.diagonal2 = true;
                 }
             }
-            checkDiagonal(items, player, player.position, player.sign);
+            return checkDiagonal(items, player, player.position, player.sign);
         }
-        diagonalSpace();
+        if(diagonalSpace()===true){
+            return;
+        }
 
         console.log(items)
     }
@@ -130,19 +135,19 @@ const gameLogic = (()=>{
 
         if (itemSpace.left && itemSpace.right){
             if(siblingDOM[position-1].textContent===sign && siblingDOM[position+1].textContent===sign){
-                gameWon(player);
+                return gameWon(player);
             }
         }
 
         else if (itemSpace.left){
             if(siblingDOM[position-1].textContent===sign && siblingDOM[position-2].textContent===sign){
-                gameWon(player);
+                return gameWon(player);
             }
         }
 
         else if (itemSpace.right){
             if(siblingDOM[position+1].textContent===sign && siblingDOM[position+2].textContent===sign){
-                gameWon(player);
+                return gameWon(player);
             }
         }
     }
@@ -153,19 +158,19 @@ const gameLogic = (()=>{
 
         if (itemSpace.top && itemSpace.bottom){
             if(siblingDOM[position-3].textContent===sign && siblingDOM[position+3].textContent===sign){
-                gameWon(player);
+                return gameWon(player);
             }
         }
 
         else if (itemSpace.top){
             if(siblingDOM[position-3].textContent===sign && siblingDOM[position-6].textContent===sign){
-                gameWon(player);
+                return gameWon(player);
             }
         }
 
         else if (itemSpace.bottom){
             if(siblingDOM[position+3].textContent===sign && siblingDOM[position+6].textContent===sign){
-                gameWon(player);
+                return gameWon(player);
             }
         }
     }
@@ -178,19 +183,19 @@ const gameLogic = (()=>{
         if(itemSpace.diagonal1 && itemSpace.diagonal2){
             if((siblingDOM[position-4].textContent===sign && siblingDOM[position+4].textContent===sign)
             || (siblingDOM[position-2].textContent===sign && siblingDOM[position+2].textContent===sign)){
-                gameWon(player);
+                return gameWon(player);
             }            
         }
 
         else if (itemSpace.diagonal1){
             if(itemSpace.top){
                 if(siblingDOM[position-4].textContent===sign && siblingDOM[position-8].textContent===sign){
-                    gameWon(player);
+                    return gameWon(player);
                 }
             }
             else if(itemSpace.bottom){
                 if(siblingDOM[position+4].textContent===sign && siblingDOM[position+8].textContent===sign){
-                    gameWon(player);
+                    return gameWon(player);
                 }
             }
         }
@@ -198,12 +203,12 @@ const gameLogic = (()=>{
         else if (itemSpace.diagonal2){
             if(itemSpace.top){
                 if(siblingDOM[position-2].textContent===sign && siblingDOM[position-4].textContent===sign){
-                    gameWon(player);
+                    return gameWon(player);
                 }
             }
             else if(itemSpace.bottom){
                 if(siblingDOM[position+2].textContent===sign && siblingDOM[position+4].textContent===sign){
-                    gameWon(player);
+                    return gameWon(player);
                 }
             }            
         }
@@ -211,6 +216,7 @@ const gameLogic = (()=>{
     
     const gameWon = (player)=>{
         console.log(`congrats to ${player.name}`)
+        return player.won = true;
     }
 
     return {startGame, chooseTurn};
@@ -272,6 +278,7 @@ const buttons = (()=>{
 
     startButton.addEventListener('click', ()=>{
         gameLogic.startGame(true);
+        startButton.remove();
     })
     return {player1, player2}
 })();
