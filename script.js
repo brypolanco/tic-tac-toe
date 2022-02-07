@@ -5,7 +5,7 @@ const gameLogic = (()=>{
     
     const startGame = (state)=>{
         runFunctions = state;
-        console.log('Start game')
+        console.log('Start game is '+state)
     }
 
     const rounds = ()=>{
@@ -48,6 +48,18 @@ const gameLogic = (()=>{
             checkSpace(itemDOM, player);
         }
         
+        if(player.won === true){
+            startGame(false);
+            player.won = false;
+            currentRound = 1;
+            return;
+        }
+        else if (currentRound === 9 && !player.won){
+            gameTie();
+            startGame(false);
+            currentRound = 1;
+            return;
+        }
         rounds();
     }
 
@@ -217,6 +229,10 @@ const gameLogic = (()=>{
     const gameWon = (player)=>{
         console.log(`congrats to ${player.name}`)
         return player.won = true;
+    }
+
+    const gameTie = ()=>{
+        console.log('the game is a tie')
     }
 
     return {startGame, chooseTurn};
