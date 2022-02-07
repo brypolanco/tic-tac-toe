@@ -298,15 +298,11 @@ const buttons = (()=>{
 
     let inputPlayer1 = inputDOM(1);
     let inputPlayer2 = inputDOM(2);
-
-    startButton.addEventListener('click', ()=>{
-        gameLogic.startGame(true);
-        startButton.remove();
-    })
     
-    return {inputPlayer1, inputPlayer2}
+    return {inputPlayer1, inputPlayer2, startButton}
 })();
 
+//Event Listeners
 let player1;
 buttons.inputPlayer1.addEventListener('keypress', (e)=>{
     if(e.key === 'Enter'){
@@ -324,5 +320,18 @@ buttons.inputPlayer2.addEventListener('keypress', (e)=>{
         console.log(buttons.inputPlayer2.value)
         buttons.inputPlayer2.disabled = true;
         player2 = Player(buttons.inputPlayer2.value, 'O', false);
+    }
+})
+
+buttons.startButton.addEventListener('click', ()=>{
+    if((typeof player1 !== 'object')||(typeof player2 !== 'object')){
+        console.log(`Please enter a name`);
+        return;
+    }
+    else{
+        gameLogic.startGame(true);
+        buttons.startButton.remove();
+        buttons.inputPlayer1.remove();
+        buttons.inputPlayer2.remove();        
     }
 })
