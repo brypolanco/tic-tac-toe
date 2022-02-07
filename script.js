@@ -25,17 +25,17 @@ const gameLogic = (()=>{
             }
         }
 
-        if(buttons.player1.myTurn === true){
+        if(player1.myTurn === true){
             console.log('if player 1')
-            buttons.player1.position = position;
-            clickSpace(itemDOM, buttons.player1);
-            buttons.player2.myTurn = true;
+            player1.position = position;
+            clickSpace(itemDOM, player1);
+            player2.myTurn = true;
         }
-        else if(buttons.player2.myTurn === true){
+        else if(player2.myTurn === true){
             console.log('else if player2')
-            buttons.player2.position = position;
-            clickSpace(itemDOM, buttons.player2);
-            buttons.player1.myTurn = true;
+            player2.position = position;
+            clickSpace(itemDOM, player2);
+            player1.myTurn = true;
         }
     }
 
@@ -287,14 +287,42 @@ const buttons = (()=>{
         return startButton;
     }
     
-    const startButton = startDOM();
+    let startButton = startDOM();
 
-    let player1 = Player('Player 1', 'X', true);
-    let player2 = Player('Player 2', 'O', false);
+    const inputDOM = (num)=>{
+        const textInput = document.createElement('input');
+        textInput.placeholder = `Player ${num}`;
+        document.body.appendChild(textInput).className = 'player-input';
+        return textInput;
+    }
+
+    let inputPlayer1 = inputDOM(1);
+    let inputPlayer2 = inputDOM(2);
 
     startButton.addEventListener('click', ()=>{
         gameLogic.startGame(true);
         startButton.remove();
     })
-    return {player1, player2}
+    
+    return {inputPlayer1, inputPlayer2}
 })();
+
+let player1;
+buttons.inputPlayer1.addEventListener('keypress', (e)=>{
+    if(e.key === 'Enter'){
+        console.log('player1 enter')
+        console.log(buttons.inputPlayer1.value)
+        buttons.inputPlayer1.disabled = true;
+        player1 = Player(buttons.inputPlayer1.value, 'X', true);
+    }
+})
+
+let player2;
+buttons.inputPlayer2.addEventListener('keypress', (e)=>{
+    if(e.key === 'Enter'){
+        console.log('player2 enter')
+        console.log(buttons.inputPlayer2.value)
+        buttons.inputPlayer2.disabled = true;
+        player2 = Player(buttons.inputPlayer2.value, 'O', false);
+    }
+})
