@@ -49,15 +49,12 @@ const gameLogic = (()=>{
         }
         
         if(player.won === true){
-            startGame(false);
-            player.won = false;
-            currentRound = 1;
+            gameOver(player);
             return;
         }
         else if (currentRound === 9 && !player.won){
             gameTie();
-            startGame(false);
-            currentRound = 1;
+            gameOver(player);
             return;
         }
         rounds();
@@ -233,6 +230,31 @@ const gameLogic = (()=>{
 
     const gameTie = ()=>{
         console.log('the game is a tie')
+    }
+
+    const gameOver = (player)=>{
+        startGame(false);
+        player.won = false;
+        currentRound = 1;
+
+        const restartButton = document.createElement('button');
+        restartButton.textContent = 'RESTART';
+        document.body.appendChild(restartButton).id = 'start-button';
+
+        restartButton.addEventListener('click',()=>{
+            gameBoard.items.forEach((element)=>{
+                element.textContent = null;
+            })
+
+            document.body.appendChild(buttons.startButton);
+            buttons.inputPlayer1.disabled = false;
+            document.body.appendChild(buttons.inputPlayer1);
+            buttons.inputPlayer2.disabled = false;
+            document.body.appendChild(buttons.inputPlayer2);
+            restartButton.remove();
+        })
+
+        
     }
 
     return {startGame, chooseTurn};
