@@ -5,7 +5,6 @@ const gameLogic = (()=>{
     
     const startGame = (state)=>{
         runFunctions = state;
-        console.log('Start game is '+state)
     }
 
     const rounds = ()=>{
@@ -15,7 +14,6 @@ const gameLogic = (()=>{
     
     const chooseTurn = (itemDOM, position)=>{
         if(runFunctions === false){
-            console.log('Cant run. Press Start first.')
             return;
         }
 
@@ -26,13 +24,11 @@ const gameLogic = (()=>{
         }
 
         if(player1.myTurn === true){
-            console.log('if player 1')
             player1.position = position;
             clickSpace(itemDOM, player1);
             player2.myTurn = true;
         }
         else if(player2.myTurn === true){
-            console.log('else if player2')
             player2.position = position;
             clickSpace(itemDOM, player2);
             player1.myTurn = true;
@@ -40,8 +36,6 @@ const gameLogic = (()=>{
     }
 
     const clickSpace = (itemDOM, player)=>{
-        console.log(itemDOM);
-        console.log('current player sign: ' + player.sign)
         itemDOM.textContent = player.sign;
         player.myTurn = false;
         if(currentRound>=5){
@@ -74,7 +68,6 @@ const gameLogic = (()=>{
     const checkSpace = (itemDOM, player)=>{
         let items = [];
         let itemClass = itemDOM.classList;
-        console.log('checkSpace is run')
 
         const rowSpace = ()=>{
             if(itemClass.contains('column1')){
@@ -134,13 +127,10 @@ const gameLogic = (()=>{
         if(diagonalSpace()===true){
             return;
         }
-
-        console.log(items)
     }
 
     const checkRow = (itemSpace, player, position, sign)=>{
         const siblingDOM = gameBoard.items;
-        console.log('checkRow is run')
 
         if (itemSpace.left && itemSpace.right){
             if(siblingDOM[position-1].textContent===sign && siblingDOM[position+1].textContent===sign){
@@ -163,7 +153,6 @@ const gameLogic = (()=>{
 
     const checkColumn = (itemSpace, player, position, sign)=>{
         const siblingDOM = gameBoard.items;
-        console.log('checkColumn is run')
 
         if (itemSpace.top && itemSpace.bottom){
             if(siblingDOM[position-3].textContent===sign && siblingDOM[position+3].textContent===sign){
@@ -186,8 +175,6 @@ const gameLogic = (()=>{
     
     const checkDiagonal = (itemSpace, player, position, sign)=>{
         const siblingDOM = gameBoard.items;
-        console.log('diagonal sign: '+sign);
-        console.log('checkDiagonal is run')
 
         if(itemSpace.diagonal1 && itemSpace.diagonal2){
             if((siblingDOM[position-4].textContent===sign && siblingDOM[position+4].textContent===sign)
@@ -286,7 +273,6 @@ const gameBoard = (()=>{
             let position = items.findIndex((element)=>{
                 return element === square;
             })
-            console.log(`position is at items[${position}]`)
             gameLogic.chooseTurn(square, position)
         })
     })
@@ -328,9 +314,12 @@ const buttons = (()=>{
 let player1;
 buttons.inputPlayer1.addEventListener('keypress', (e)=>{
     if(e.key === 'Enter'){
-        console.log('player1 enter')
-        console.log(buttons.inputPlayer1.value)
         buttons.inputPlayer1.disabled = true;
+        if(typeof player1 === 'object'){
+            player1.name = buttons.inputPlayer1.value;
+            player1.myTurn = true;
+            return;
+        }
         player1 = Player(buttons.inputPlayer1.value, 'X', true);
     }
 })
@@ -338,17 +327,19 @@ buttons.inputPlayer1.addEventListener('keypress', (e)=>{
 let player2;
 buttons.inputPlayer2.addEventListener('keypress', (e)=>{
     if(e.key === 'Enter'){
-        console.log('player2 enter')
-        console.log(buttons.inputPlayer2.value)
         buttons.inputPlayer2.disabled = true;
+        if(typeof player2 === 'object'){
+            player2.name = buttons.inputPlayer2.value;
+            player2.myTurn = false;
+            return;
+        }
         player2 = Player(buttons.inputPlayer2.value, 'O', false);
     }
 })
 
 buttons.startButton.addEventListener('click', ()=>{
-    if((typeof player1 !== 'object')||(typeof player2 !== 'object')){
+    if((buttons.inputPlayer1.disabled === false)||(buttons.inputPlayer2.disabled === false)){
         console.log(`Please enter a name`);
-        return;
     }
     else{
         gameLogic.startGame(true);
